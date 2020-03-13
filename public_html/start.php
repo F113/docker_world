@@ -1,6 +1,5 @@
-<h1>WORLD RESTART!</h1>
-
 <?php
+session_start();
 $host = 'mysql';
 $user = 'root';
 $pass = 'rootpassword';
@@ -19,10 +18,12 @@ CREATE TABLE particles (
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     m1 INT(11) NOT NULL,
     m2 INT(11) NOT NULL,
-    new` INT(11) NOT NULL DEFAULT '0',
+    new INT(11) NOT NULL DEFAULT '0',
     `counter` INT(11) NOT NULL DEFAULT '0'
 ) ENGINE=MEMORY
 ");
+
+//print_r($conn->error_list);
 
 $conn->query("
 CREATE TABLE `image` (
@@ -59,7 +60,6 @@ BEGIN
     END REPEAT;
     
     CALL Shift();
-	SELECT COUNT(*) as cnt FROM image; 
 END
 ");
 
@@ -83,7 +83,10 @@ END
 ");
 
 if ($conn->error_list === []) {
-    echo 'success';
+    echo 'World restarted';
+    $_SESSION['coords'][1] = [-1, 1];
+    $_SESSION['coords'][2] = [1, -1];
+    print_r($_SESSION);
 } else {
     print_r($conn->error_list);
 }
