@@ -1,13 +1,5 @@
 <?php
-session_start();
-$host = 'mysql';
-$user = 'root';
-$pass = 'rootpassword';
-$conn = new mysqli($host, $user, $pass);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include(__DIR__ . '/db.php');
 
 try {
   $conn->query('DROP DATABASE world');

@@ -1,15 +1,5 @@
 <?php
-session_start();
-$host = 'mysql';
-$user = 'root';
-$pass = 'rootpassword';
-$db   = 'world';
-
-$conn = new mysqli($host, $user, $pass, $db);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include(__DIR__ . '/db.php');
 
 $start = microtime(true);
 $result = $conn->query("CALL Step");
@@ -27,17 +17,25 @@ $time_db = microtime(true) - $start;
 $html = '';
 $start = microtime(true);
 while ($particle = $result->fetch_assoc()) {
-    if (!isset($_SESSION['coords'][$particle['id']])) {
+    if (!isset($_SESSION['coords'][$particle['id']])) {        
+        $q0 = 0;
+        $q1 = 0;
+
+        while ($q0 == 0 && $q1 == 0) {
+            $q0 = mt_rand(-1, 1);
+            $q1 = mt_rand(-1, 1);
+        }
+
         $_SESSION['coords'][$particle['id']] = [
-            $_SESSION['coords'][$particle['m1']][0] + (mt_rand(0, 1)*2 - 1),
-            $_SESSION['coords'][$particle['m1']][1] + (mt_rand(0, 1)*2 - 1)
+            $_SESSION['coords'][$particle['m1']][0] + $q0,
+            $_SESSION['coords'][$particle['m1']][1] + $q1
         ];
     }
 
-    if ($particle['counter'] < 1) continue;
-    $colors = [200-$particle['counter'],200-$particle['counter'],200-$particle['counter']];
+    if ($particle['counter'] < 2) continue;
+    $colors = [200-$particle['counter']*2, 200-$particle['counter']*2, 200-$particle['counter']*2];
 
-    $html .= '<div class="p" style="top:'.$_SESSION['coords'][$particle['id']][0].'px; left:'.$_SESSION['coords'][$particle['id']][1].'px; background-color: rgb('.implode(',', $colors).')"></div>';
+    $html .= '<div data-id="'.$particle['id'].'" class="p" style="top:'.$_SESSION['coords'][$particle['id']][0].'px; left:'.$_SESSION['coords'][$particle['id']][1].'px; background-color: rgb('.implode(',', $colors).')"></div>';
     //echo implode(' ', $particle) . '<br>';
 }
 $time_php = microtime(true) - $start;
