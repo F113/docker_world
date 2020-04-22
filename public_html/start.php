@@ -84,6 +84,11 @@ if ($conn->error_list === []) {
     $_SESSION['coords'] = [];
     $_SESSION['coords'][1] = [-1, 1];
     $_SESSION['coords'][2] = [1, -1];
+    
+    $_SESSION['coords_busy'] = [];
+    $_SESSION['coords_busy'][] = '-1/1';
+    $_SESSION['coords_busy'][] = '1/-1';
+    
     echo '<pre>';
     print_r($_SESSION);
     echo '</pre>';
